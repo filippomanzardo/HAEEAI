@@ -1,7 +1,8 @@
 import os
 from enum import StrEnum
 
-from pydantic import BaseSettings, Field
+from pydantic import Field
+from pydantic_settings import BaseSettings
 
 _ENV_FILE = f"./{os.environ.get('ENVIRONMENT', 'development')}.env"
 
