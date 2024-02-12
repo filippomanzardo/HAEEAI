@@ -90,9 +90,7 @@ class BluetoothAdapter:
                 characteristic
                 for characteristic in self.ai_plant_service.characteristics
                 if _WRITE_TYPE in characteristic.properties
-                and characteristic.uuid.startswith(
-                    _MODEL_CHARACTERISTIC_UUID_PREFIX
-                )
+                and characteristic.uuid.startswith(_MODEL_CHARACTERISTIC_UUID_PREFIX)
             ),
             None,
         )
@@ -162,17 +160,27 @@ class BluetoothAdapter:
     async def send_data(self, data: bytearray) -> None:
         """Send data to the Bluetooth adapter."""
         self._read_enabled = False
-        _LOGGER.info("⚙️ About to send data %s to the model characteristic %s ⚙️", len(data), self.model_characteristic.uuid)
+        _LOGGER.info(
+            "⚙️ About to send data %s to the model characteristic %s ⚙️",
+            len(data),
+            self.model_characteristic.uuid,
+        )
         if len(data) > 512:
             _LOGGER.info("⚙️ Data is too big. Splitting it into chunks... ⚙️")
             for chunk in chunk_data(data, 512):
                 _LOGGER.info("⚙️ Sending chunk %s ⚙️", chunk)
-                await self.client.write_gatt_char(self.model_characteristic, chunk, response=True)
+                await self.client.write_gatt_char(
+                    self.model_characteristic, chunk, response=True
+                )
                 await asyncio.sleep(2)
 
-            await self.client.write_gatt_char(self.model_characteristic, _END_SEQUENCE, response=True)
+            await self.client.write_gatt_char(
+                self.model_characteristic, _END_SEQUENCE, response=True
+            )
         else:
-            await self.client.write_gatt_char(self.model_characteristic, data, response=True)
+            await self.client.write_gatt_char(
+                self.model_characteristic, data, response=True
+            )
 
         self._read_enabled = True
 

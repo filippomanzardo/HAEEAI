@@ -1,8 +1,8 @@
 from typing import Any
 
 from fastapi import APIRouter, BackgroundTasks
-from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
 
 from aiplant.bluetooth.adapter import BluetoothAdapter
 from aiplant.database.eeprom import EEPROMDatabase
@@ -11,7 +11,12 @@ from aiplant.model.models import Feature
 from aiplant.model.waterer import Waterer
 
 
-def create_model_router(waterer: Waterer, labeler: Labeler, database: EEPROMDatabase, adapter: BluetoothAdapter) -> APIRouter:
+def create_model_router(
+    waterer: Waterer,
+    labeler: Labeler,
+    database: EEPROMDatabase,
+    adapter: BluetoothAdapter,
+) -> APIRouter:
     """Build a FastAPI router for serving model endpoints."""
     router = APIRouter()
 
@@ -53,7 +58,10 @@ def create_model_router(waterer: Waterer, labeler: Labeler, database: EEPROMData
         ]
 
         return JSONResponse(
-            content={"message": "Labeling the feature.", "result": jsonable_encoder(parsed_result)},
+            content={
+                "message": "Labeling the feature.",
+                "result": jsonable_encoder(parsed_result),
+            },
         )
 
     @router.post("/send-new-model")
@@ -77,12 +85,13 @@ def create_model_router(waterer: Waterer, labeler: Labeler, database: EEPROMData
 
     return router
 
+
 def to_hex_array(tflite_model: bytes) -> list[int]:
     """Convert the data to a hex array."""
     hex_array = []
     for i, val in enumerate(tflite_model):
         # Construct string from hex
-        hex_str = format(val, '#04x')
+        hex_str = format(val, "#04x")
         # Add formatting so each line stays within 80 characters
         hex_array.append(int(hex_str, 0))
 

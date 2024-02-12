@@ -29,7 +29,9 @@ class Dependencies:
         await self.bluetooth_adapter.connect()
         await self.database.connect()
 
-        self.labeler.add_base_samples([to_sample(entry) for entry in self.database.entries])
+        self.labeler.add_base_samples(
+            [to_sample(entry) for entry in self.database.entries]
+        )
 
         await asyncio.gather(
             self.labeler.refresh_model(),
@@ -39,7 +41,10 @@ class Dependencies:
     async def stop(self, timeout_seconds: int) -> None:
         """Stop the dependencies."""
         await asyncio.wait_for(
-            asyncio.gather(self.database.disconnect(), self.bluetooth_adapter.disconnect()), timeout=timeout_seconds
+            asyncio.gather(
+                self.database.disconnect(), self.bluetooth_adapter.disconnect()
+            ),
+            timeout=timeout_seconds,
         )
 
 

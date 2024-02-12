@@ -41,7 +41,9 @@ class EEPROMDatabase:
             raise RuntimeError("Database wasn't initialized.")
         return self._database
 
-    def load_samples(self, samples: list[Sample], plat_id: PlantId = PlantId(1)) -> None:
+    def load_samples(
+        self, samples: list[Sample], plat_id: PlantId = PlantId(1)
+    ) -> None:
         """Load the samples into the database."""
         for sample in samples:
             key = Key((sample[0].timestamp, plat_id))
@@ -51,7 +53,6 @@ class EEPROMDatabase:
                 datetime_utc=sample[0].timestamp,
                 target=sample[1],
             )
-
 
     @property
     def real_time_samples(self) -> list[Feature]:
@@ -64,7 +65,6 @@ class EEPROMDatabase:
             )
             for key, value in self._real_time_samples.items()
         ]
-
 
     async def connect(self) -> None:
         """Connect to the database."""
@@ -137,12 +137,8 @@ class EEPROMDatabase:
 
     def log_status(self) -> None:
         num_entries = len(self._real_time_samples)
-        temp_entries = [
-            temp for _, temp in self._real_time_samples.values()
-        ]
-        moist_entries = [
-            moist for moist, _ in self._real_time_samples.values()
-        ]
+        temp_entries = [temp for _, temp in self._real_time_samples.values()]
+        moist_entries = [moist for moist, _ in self._real_time_samples.values()]
         max_, min_, mean_ = (
             max(temp_entries),
             min(temp_entries),

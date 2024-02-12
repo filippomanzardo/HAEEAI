@@ -1,8 +1,9 @@
 import asyncio
 import logging
 
-from aiplant.model.models import Feature, Sample
 from sklearn.svm import SVC
+
+from aiplant.model.models import Feature, Sample
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -10,7 +11,9 @@ _LOGGER = logging.getLogger(__name__)
 class Labeler:
     """A class to represent the Labeler."""
 
-    def __init__(self, base_samples: list[Sample], *, _model: SVC | None = None) -> None:
+    def __init__(
+        self, base_samples: list[Sample], *, _model: SVC | None = None
+    ) -> None:
         self._base_samples = base_samples
         self._additional_samples = list[Sample]()
         self._model = _model or SVC()
@@ -25,7 +28,9 @@ class Labeler:
         features = [sample[0] for sample in combined_samples]
         labels = [sample[1] for sample in combined_samples]
 
-        training_features = [(feature.temperature, feature.moisture) for feature in features]
+        training_features = [
+            (feature.temperature, feature.moisture) for feature in features
+        ]
 
         _LOGGER.info("🌱 Training Labeler with %s samples 🌱", len(training_features))
 
@@ -48,5 +53,3 @@ class Labeler:
         self._additional_samples.extend(samples)
 
         return samples
-
-
